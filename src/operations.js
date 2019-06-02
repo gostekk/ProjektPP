@@ -1,9 +1,10 @@
 const operators = {
-  '+': 0,
-  '*': 0,
+  '+': 1,
+  '*': 2,
   '-': 1,
   '/': 2,
   '%': 3,
+  '^': 3,
 }
 
 function isOperator (token) {
@@ -17,29 +18,28 @@ function InToPost(equat) {
   let operations = [];
   let output = [];
   let stack = [];
-  let sign;
 
   const str = equat.replace(/\s+/g, '').split('');
 
   for (let i=0, l=str.length; i<l; ++i) {
-    if (str[i] === '(') {
+    if (str[i] === ' ') {
+        continue;
+    } else if (str[i] === '(') {
       stack.push(str[i]);
-      sign = undefined;
     } else if (str[i] === ')') {
       let operator;
-      sign = undefined;
       while ((operator = stack.pop()) && operator !== '(') {
         output.push(operator + ' ');
       }
-    } else if (isOperator(str[i])) {
-      stack.push(str[i]);
-      sign = str[i];
-    } else {
+    } else if (!isOperator(str[i])) {
       output.push(str[i] + ' ');
-      if (sign) {
+    } else if (isOperator(str[i])) {
+      let stackSize = stack.length;
+      while (stackSize > 0 && operators[stack[stackSize-1]] > operators[str[i]]) {
         output.push(stack.pop() + ' ');
-        sign = undefined;
+        --stackSize;
       }
+      stack.push(str[i]);
     }
 
     operations.push({
@@ -55,7 +55,7 @@ function InToPost(equat) {
   }
 
   // console.log(operations);
-  return { value: output.join(''), operations };
+  return { value: output.join('').trim(), operations };
 }
 
 function InToPre(equat) {
