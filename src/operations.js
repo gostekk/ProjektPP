@@ -66,18 +66,26 @@ function InToPre(equat) {
   const str = equat.replace(/\s+/g, '').split('').reverse();
 
   for (let i=0, l=str.length; i<l; ++i) {
-    if (str[i] === ')') {
+    if (str[i] === ' ') {
+      continue;
+    } else if (str[i] === ')') {
       stack.push(str[i]);
     } else if (str[i] === '(') {
       let operator;
       while ((operator = stack.pop()) && operator !== ')') {
         output.push(operator + ' ');
       }
-    } else if (isOperator(str[i])) {
-      stack.push(str[i]);
-    } else {
+    } else if (!isOperator(str[i])) {
       output.push(str[i] + ' ');
+    } else if (isOperator(str[i])) {
+      let stackSize = stack.length;
+      while (stackSize > 0 && operators[stack[stackSize-1]] > operators[str[i]]) {
+        output.push(stack.pop() + ' ');
+        --stackSize;
+      }
+      stack.push(str[i]);
     }
+
     operations.push({
       id: i,
       expression: str[i],
