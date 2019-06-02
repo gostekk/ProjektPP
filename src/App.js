@@ -159,7 +159,7 @@ function App() {
           <CompareArrowsIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Polish Notation Converter
+          Konwerter notacji arytmetycznej
         </Typography>
         <form className={classes.form} noValidate onSubmit={(e) => e.preventDefault()}>
           <TextField
@@ -169,7 +169,7 @@ function App() {
             required
             fullWidth
             id="expression"
-            label="Expression"
+            label="Wyrażenie"
             name="expression"
             autoComplete="off"
             autoFocus
@@ -182,14 +182,14 @@ function App() {
             color="primary"
             className={classes.submit}
           >
-            Convert
+            Konwertuj
           </Button>
           <ExpDialog selectedValue={selectedValue} open={open} list={list} onClose={handleClose} />
           { selectedValue !== undefined
             ? (
             <Grid container>
               <InputBase className={classes.input} readOnly value={result.value} />
-              <Tooltip title="Copy to clipboard" placement="top">
+              <Tooltip title="Kopiuj do schowka" placement="top">
                 <IconButton
                   color="primary"
                   className={classes.iconButton}
@@ -216,9 +216,9 @@ function App() {
               }}
               columns={[
                 { title: "No.", field: "id" },
-                { title: "Expression", field: "expression" },
-                { title: "Stack", field: "stack" },
-                { title: "Result", field: "output" },
+                { title: "Znak", field: "expression" },
+                { title: "Stos", field: "stack" },
+                { title: "Wynik", field: "output" },
               ]}
               data={result.operations}
               title={result.value}
