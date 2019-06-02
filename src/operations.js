@@ -54,8 +54,8 @@ function InToPost(equat) {
     output.push(stack.pop());
   }
 
-  console.log(output.join(''));
   // console.log(operations);
+  return { value: output.join(''), operations };
 }
 
 function InToPre(equat) {
@@ -90,8 +90,8 @@ function InToPre(equat) {
     output.push(stack.pop()+ ' ');
   }
   
-  console.log(output.reverse().join(''));
   // console.log(operations);
+  return { value: output.reverse().join(''), operations };
 }
 ////////////////////////////////////////
 /////////////// POST ///////////////////
@@ -120,7 +120,7 @@ function PostToIn(equat) {
   });
 
   // console.log(operations);
-  console.log(stack[0]);
+  return { value: stack[0], operations };
 }
 
 // Post to Pre
@@ -146,7 +146,7 @@ function PostToPre(equat) {
   });
 
   // console.log(operations);
-  console.log(stack[0]);
+  return { value: stack[0], operations };
 }
 
 ////////////////////////////////////////
@@ -176,7 +176,7 @@ function PreToPost(equat) {
   });
 
   // console.log(operations);
-  console.log(stack[0]);
+  return {value: stack[0], operations };
 }
 
 // Post to In
@@ -201,9 +201,41 @@ function PreToIn(equat) {
     });
   });
 
-  // console.log(operations);
-  console.log(stack[0]);
+  return {value: stack[0], operations };
 }
+
+const op = [
+  { 
+    id: 0,
+    name: 'Postfix',
+    operation: 'InToPost',
+  },
+  { 
+    id: 1,
+    name: 'Prefix',
+    operation: 'InToPre',
+  },
+  { 
+    id: 2,
+    name: 'Infix',
+    operation: 'PostToIn',
+  },
+  { 
+    id: 3,
+    name: 'Prefix',
+    operation: 'PostToPre',
+  },
+  { 
+    id: 4,
+    name: 'Postfix',
+    operation: 'PreToPost',
+  },
+  { 
+    id: 5,
+    name: 'Infix',
+    operation: 'PreToIn',
+  },
+];
 
 export {
   PostToIn,
@@ -212,5 +244,6 @@ export {
   InToPre,
   PreToIn,
   PreToPost,
-  isOperator
+  isOperator,
+  op
 };

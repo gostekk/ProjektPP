@@ -12,14 +12,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import {
-//   InToPost,
-//   InToPre,
-//   PostToIn,
-//   PostToPre,
-//   PreToPost,
-//   PreToIn
-  isOperator
+  InToPost,
+  InToPre,
+  PostToIn,
+  PostToPre,
+  PreToPost,
+  PreToIn,
+  isOperator,
+  op,
 } from './operations';
+
+import ExpDialog from './Components/Dialog';
 
 import './App.css';
 
@@ -48,17 +51,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function checkExpression(expression) {
-  const expressionCopy = expression.split('');
-  if (isOperator(expressionCopy[0])) {
-    return 'prefix';
-  } else if (isOperator(expressionCopy.pop())) {
-    return 'postfix';
-  } else {
-    return 'infix';
-  }
-}
-
 function useFormInput(initialValue) {
   const [value, setValue] = useState(initialValue);
 
@@ -73,18 +65,59 @@ function useFormInput(initialValue) {
 }
 
 function App() {
+  const [open, setOpen] = React.useState(false);
+  const [list, setList] = React.useState([]);
   const expression = useFormInput('');
+  const [selectedValue, setSelectedValue] = React.useState('');
+  const [result, setResult] = useState({});
   const classes = useStyles();
   
-  // console.log('In');
-  // InToPost("(3 * 4 / (2 + 5)) * (3 + 4)");
-  // InToPre("(3 * 4 / (2 + 5)) * (3 + 4)");
-  // console.log('Post');
-  // PostToIn("3 4 * 2 5 + / 3 4 + *");
-  // PostToPre("3 4 * 2 5 + / 3 4 + *");
-  // console.log('Pre');
-  // PreToPost("* / * 3 4 + 2 5 + 3 4 ");
-  // PreToIn("* / * 3 4 + 2 5 + 3 4 ");
+  function handleClickOpen() {
+    setOpen(true);
+  }
+
+  const handleClose = value => {
+    setOpen(false);
+    setSelectedValue(value);
+    switch(value) {
+      case 0:
+        setResult(InToPost(expression.value));
+        break;
+      case 1:
+        setResult(InToPre(expression.value));
+        break;
+      case 2:
+        setResult(PostToIn(expression.value));
+        break;
+      case 3:
+        setResult(PostToPre(expression.value));
+        break;
+      case 4:
+        setResult(PreToPost(expression.value));
+        break;
+      case 5:
+        setResult(PreToIn(expression.value));
+        break;
+      default:
+        break;
+    }
+  };
+
+  function checkExpression(expression) {
+    if (!expression) {
+      return;
+    }
+    const expressionCopy = expression.split('');
+    if (isOperator(expressionCopy[0])) {
+      setList([op[4], op[5]])
+    } else if (isOperator(expressionCopy.pop())) {
+      setList([op[2], op[3]])
+    } else {
+      setList([op[0], op[1]])
+    }
+    handleClickOpen();
+  }
+
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
@@ -95,7 +128,7 @@ function App() {
         <Typography component="h1" variant="h5">
           Polish Notation Converter
         </Typography>
-        <form className={classes.form} noValidate>
+        <form className={classes.form} noValidate onSubmit={(e) => e.preventDefault()}>
           <TextField
             {...expression}
             variant="outlined"
@@ -110,7 +143,7 @@ function App() {
           />
           <Button
             type="button"
-            onClick={() => console.log(checkExpression(expression.value))}
+            onClick={() => checkExpression(expression.value)}
             fullWidth
             variant="contained"
             color="primary"
@@ -118,11 +151,10 @@ function App() {
           >
             Convert
           </Button>
+          <ExpDialog selectedValue={selectedValue} open={open} list={list} onClose={handleClose} />
           <Grid container>
             <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
+              { result.value }
             </Grid>
             <Grid item>
               <Link href="#" variant="body2">
