@@ -1,15 +1,21 @@
 import React, { useState } from 'react';
+import MaterialTable from 'material-table';
+import copy from 'copy-to-clipboard';
 
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import CompareArrowsIcon from '@material-ui/icons/CompareArrows';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+import InputBase from '@material-ui/core/InputBase';
+import Tooltip from '@material-ui/core/Tooltip';
+import IconButton from '@material-ui/core/IconButton';
+import SaveAltIcon from '@material-ui/icons/SaveAlt';
 
 import {
   InToPost,
@@ -32,11 +38,26 @@ const useStyles = makeStyles(theme => ({
       backgroundColor: theme.palette.common.white,
     },
   },
+  root: {
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 2,
+      paddingRight: 2,
+    },
+  },
   paper: {
     marginTop: theme.spacing(8),
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+  },
+  table: {
+    paddingTop: 5,
+    [theme.breakpoints.down('sm')]: {
+      width: '100%',
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: 380,
+    },
   },
   avatar: {
     margin: theme.spacing(1),
@@ -48,6 +69,18 @@ const useStyles = makeStyles(theme => ({
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
+  },
+  input: {
+    marginLeft: 8,
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
+  divider: {
+    width: 1,
+    height: 28,
+    margin: 4,
   },
 }));
 
@@ -68,7 +101,7 @@ function App() {
   const [open, setOpen] = React.useState(false);
   const [list, setList] = React.useState([]);
   const expression = useFormInput('');
-  const [selectedValue, setSelectedValue] = React.useState('');
+  const [selectedValue, setSelectedValue] = React.useState(undefined);
   const [result, setResult] = useState({});
   const classes = useStyles();
   
@@ -119,7 +152,7 @@ function App() {
   }
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container className={classes.root} component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
@@ -152,15 +185,47 @@ function App() {
             Convert
           </Button>
           <ExpDialog selectedValue={selectedValue} open={open} list={list} onClose={handleClose} />
+          { selectedValue !== undefined
+            ? (
+            <Grid container>
+              <InputBase className={classes.input} readOnly value={result.value} />
+              <Tooltip title="Copy to clipboard" placement="top">
+                <IconButton
+                  color="primary"
+                  className={classes.iconButton}
+                  aria-label="SaveAlt"
+                  onClick={() => copy(result.value)}
+                >
+                  <SaveAltIcon />
+                </IconButton>
+              </Tooltip>
+            </Grid>
+            )
+            : undefined
+          }            
           <Grid container>
-            <Grid item xs>
-              { result.value }
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
+          { selectedValue !== undefined && selectedValue < 2
+            ? (<div className={classes.table}>
+            <MaterialTable
+              options={{
+                search: false,
+                paging: false,
+                toolbar: false,
+                sorting: false,
+                showTitle: false
+              }}
+              columns={[
+                { title: "No.", field: "id" },
+                { title: "Expression", field: "expression" },
+                { title: "Stack", field: "stack" },
+                { title: "Result", field: "output" },
+              ]}
+              data={result.operations}
+              title={result.value}
+              />
+            </div>)
+            : undefined
+          }
           </Grid>
         </form>
       </div>

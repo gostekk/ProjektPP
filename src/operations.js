@@ -45,8 +45,8 @@ function InToPost(equat) {
     operations.push({
       id: i,
       expression: str[i],
-      stack: stack.map((el) => el),
-      postfix: output.map((el) => el),
+      stack: stack.map((el) => el).join(''),
+      output: output.map((el) => el).join(''),
     });
   }
 
@@ -81,8 +81,8 @@ function InToPre(equat) {
     operations.push({
       id: i,
       expression: str[i],
-      stack: stack.map((el) => el),
-      prefix: output.map((el) => el).reverse(),
+      stack: stack.map((el) => el).join(''),
+      output: output.map((el) => el).reverse().join(''),
     });
   }
 
