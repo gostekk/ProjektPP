@@ -226,6 +226,27 @@ function App() {
             </div>)
             : undefined
           }
+          { selectedValue !== undefined && selectedValue > 1
+            ? (<div className={classes.table}>
+            <MaterialTable
+              options={{
+                search: false,
+                paging: false,
+                toolbar: false,
+                sorting: false,
+                showTitle: false
+              }}
+              columns={[
+                { title: "No.", field: "id" },
+                { title: "Expression", field: "expression" },
+                { title: "Stack", field: "stack" },
+              ]}
+              data={result.operations}
+              title={result.value}
+              />
+            </div>)
+            : undefined
+          }
           </Grid>
         </form>
       </div>
