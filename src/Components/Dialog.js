@@ -23,7 +23,7 @@ function ExpDialog(props) {
         aria-labelledby="responsive-dialog-title"
         {...other}
       >
-        <DialogTitle id="responsive-dialog-title">{"Convert to?"}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">{"Wybierz notacje?"}</DialogTitle>
         <List>
         {list.map(notation => (
           <ListItem button onClick={() => handleListItemClick(notation.id)} key={notation.id}>
